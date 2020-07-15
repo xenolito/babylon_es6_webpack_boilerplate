@@ -1,12 +1,14 @@
 const path = require("path");
 const outputDir = path.resolve(__dirname, "build");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+console.log("==> WEBPACK CONFIG: PRODUCTION");
 
 module.exports = {
     mode: "production",
     entry: path.resolve(__dirname, "app/src"),
     output: {
-        path: outputDir,
+        path: outputDir + "/js/",
         filename: "bundle.js"
     },
     module: {
@@ -21,16 +23,6 @@ module.exports = {
     optimization: {
         concatenateModules: true,
         minimize: true,
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: 4,
-                uglifyOptions: {
-                    output: {
-                        comments: false
-                    }
-                }
-            })
-        ]
+        minimizer: [new TerserPlugin()]
     }
 };

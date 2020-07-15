@@ -16,7 +16,7 @@ process.env.NODE_ENV = argv.production || "development";
 const DEVELOPMENT = process.env.NODE_ENV === "development" ? true : false;
 
 const webpackConfig =
-    process.env.NODE_ENV === "production" ? "./webpack.config.prod.js" : "./webpack.config.js";
+    process.env.NODE_ENV === "development" ? "./webpack.config.js" : "./webpack.config.prod.js";
 
 // run webpack to compile the script into a bundle
 function compileJS(done) {

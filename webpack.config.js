@@ -1,6 +1,8 @@
 const path = require("path");
 const outputDir = path.resolve(__dirname, "build");
 
+console.log("==> WEBPACK CONFIG: DEVELOPMENT");
+
 module.exports = {
     mode: "development",
     entry: path.resolve(__dirname, "app/src"),
