@@ -8,6 +8,7 @@ const srcCSS = "./app/template/style.css";
 const srcAssets = "./app/assets/*";
 
 function clean(done) {
+    console.log("cleaning");
     // Clean the dist folder
     del.sync([OUT_DIR]);
 
