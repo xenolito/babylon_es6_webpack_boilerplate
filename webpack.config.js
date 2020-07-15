@@ -6,19 +6,19 @@ module.exports = {
     entry: path.resolve(__dirname, "app/src"),
     devtool: "inline-source-map",
     output: {
-        path: outputDir,
+        path: outputDir + "/js/",
         filename: "bundle.js"
     },
-    devtool: 'source-map',
+    devtool: "source-map",
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.js|jsx$/,
                 exclude: /node_modules/,
                 use: ["babel-loader"]
             },
             {
-                test: /\.js$/,
+                test: /\.js|jsx$/,
                 use: ["source-map-loader"],
                 enforce: "pre"
             }

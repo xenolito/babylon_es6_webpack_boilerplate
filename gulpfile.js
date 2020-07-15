@@ -1,3 +1,10 @@
+/*------------------------------------------------------------------------------------------------------*
+                        USAGE
+\*------------------------------------------------------------------------------------------------------*/
+// 1. npm install
+// 2. build:dev and build:prod npm scripts are compiling your code for development and production respectively.
+// 3. npm start is starting a lite-server inside the build folder
+
 const gulp = require("gulp");
 const webpack = require("webpack");
 
@@ -7,11 +14,13 @@ const browserSync = require("browser-sync").create();
 
 process.env.NODE_ENV = argv.production || "development";
 
+const DEVELOPMENT = process.env.NODE_ENV === "development" ? true : false;
+
 const webpackConfig =
     process.env.NODE_ENV === "production" ? "./webpack.config.prod.js" : "./webpack.config.js";
 
 // run webpack to compile the script into a bundle
-function compile(done) {
+function compileJS(done) {
     return new Promise((resolve, reject) => {
         webpack(require(webpackConfig), (err, stats) => {
             if (err) {
@@ -30,7 +39,7 @@ function serve(done) {
     browserSync.init(
         {
             server: "./build",
-            port: 8080,
+            port: 3000,
             host: "0.0.0.0"
         },
         done
@@ -47,12 +56,16 @@ function watch(done) {
             ]
         },
         // when something changes, rebuild + reload
-        gulp.series(compile, reload)
+        gulp.series(tasks.clean, tasks.copyAssets, tasks.copyHtml, tasks.copyCss, compileJS, reload)
     );
 }
 
 function reload(done) {
     browserSync.reload();
+    console.log(
+        "ENV ===> " + (process.env.NODE_ENV === "development" ? "DEVELOPMENT" : "PRODUCTION")
+    );
+
     done();
 }
 
@@ -61,11 +74,27 @@ gulp.task("copy:css", tasks.copyCss);
 gulp.task("copy:assets", tasks.copyAssets);
 gulp.task(
     "server",
-    gulp.series(tasks.clean, tasks.copyAssets, tasks.copyHtml, tasks.copyCss, compile, serve, watch)
+    gulp.series(
+        tasks.clean,
+        tasks.copyAssets,
+        tasks.copyHtml,
+        tasks.copyCss,
+        compileJS,
+        serve,
+        watch
+    )
 );
 
 // default includes all
 gulp.task(
     "default",
-    gulp.series(tasks.clean, tasks.copyAssets, tasks.copyHtml, tasks.copyCss, compile)
+    gulp.series(
+        tasks.clean,
+        tasks.copyAssets,
+        tasks.copyHtml,
+        tasks.copyCss,
+        compileJS,
+        serve,
+        watch
+    )
 );
