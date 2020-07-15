@@ -12,6 +12,7 @@ class Car {
     set userGear(gear) {
         if (this._userGears.indexOf(gear) < 0) throw new Error(`Marcha no válida: ${gear}`);
         this._userGear = gear;
+        console.log("marcha cambiada a: " + this._userGear);
     }
 
     ponMarcha(gear) {
