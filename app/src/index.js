@@ -1,12 +1,26 @@
+/*import {
+    Scene,
+    PerspectiveCamera,
+    WebGLRenderer,
+    BoxGeometry,
+    Color,
+    AxesHelper,
+    PlaneGeometry,
+    MeshBasicMaterial,
+    Mesh,
+    Clock,
+    SphereGeometry
+} from "./modules/three.module.js";
+*/
 import $ from "jquery";
 import * as THREE from "three";
 import { Car } from "./js/modules/car.js";
 
-(function() {
+(function () {
     let camera, scene, renderer;
     let geometry, material, mesh;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         init();
     });
 

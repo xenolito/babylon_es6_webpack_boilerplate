@@ -15,8 +15,13 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: path.join(__dirname, "node_modules"),
-                use: ["babel-loader"]
+                exclude: /node_modules/,
+                use: ["babel-loader"],
+                loader: "babel-loader",
+                query: {
+                    compact: true,
+                    presets: [["es2015", { modules: false }]]
+                }
             }
         ]
     },
