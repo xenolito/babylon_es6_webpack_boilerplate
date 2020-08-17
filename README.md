@@ -7,7 +7,7 @@ All development files are in the `/app` folder.
 ## Usage
 
 1. `npm install`
-2. `build:dev` and `build:prod` npm scripts are compiling your code for development and production respectively.
+2. `npm run build:dev` and `npm run build:prod` npm scripts are compiling your code for development and production respectively.
 3. `npm start` is starting a `lite-server` inside the build folder
 
 ## USAGE with GULP
