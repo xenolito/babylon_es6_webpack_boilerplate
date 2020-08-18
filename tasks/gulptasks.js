@@ -15,7 +15,7 @@ const OUT_DIR = "./build";
 // always copy the html first to dist folder
 const srcHTML = "./app/template/index.html";
 const srcCSS = "./app/template/style.css";
-const srcAssets = "./app/assets/*";
+const srcAssets = "./app/assets/**";
 
 const baseSourcePath = "./app/";
 const sourcePaths = {
@@ -56,7 +56,7 @@ function copyHtml(done) {
 }
 
 function copyAssets(done) {
-    src(srcAssets).pipe(dest(OUT_DIR + "/assets/"));
+    src(srcAssets, { base: "./app/assets" }).pipe(dest(OUT_DIR + "/assets/"));
     done();
 }
 

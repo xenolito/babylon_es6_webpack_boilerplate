@@ -7,25 +7,38 @@ import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 import { GridMaterial } from "@babylonjs/materials/grid";
-
 // Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
 import "@babylonjs/core/Meshes/meshBuilder";
 
+//import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
+
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import "@babylonjs/loaders";
+
 (function () {
+    const assetsBaseURL = "https://pictau.com/noBorrar/3Dassets/meshes/";
     // Get the canvas element from the DOM.
     const canvas = document.getElementById("renderCanvas");
 
     // Associate a Babylon Engine to it.
     const engine = new Engine(canvas);
+    // Render every frame
+    engine.runRenderLoop(() => {
+        scene.render();
+    });
+
+    window.addEventListener("resize", function () {
+        engine.resize();
+    });
 
     // Create our first scene.
     var scene = new Scene(engine);
 
     // Parameters: alpha, beta, radius, target position, scene
-    var camera = new ArcRotateCamera("Camera", 0, 0, 20, new Vector3(0, 0, 0), scene);
+    var camera = new ArcRotateCamera("Camera", 0, 0, 15, new Vector3(0, 0, 0), scene);
 
     // Positions the camera overwriting alpha, beta, radius
-    camera.setPosition(new Vector3(0, 20, 20));
+    camera.setPosition(new Vector3(0, 5, 10));
 
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
@@ -49,14 +62,14 @@ camera.attachControl(canvas, true);
     // Create a grid material
     var material = new GridMaterial("grid", scene);
 
+    /*
     // Our built-in 'sphere' shape. Params: name, subdivs, size, scene
     var sphere = Mesh.CreateSphere("sphere1", 16, 2, scene);
-
     // Move the sphere upward 1/2 its height
     sphere.position.y = 2;
-
     // Affect a material
     sphere.material = material;
+    */
 
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     var ground = Mesh.CreateGround("ground1", 6, 6, 2, scene);
@@ -64,56 +77,53 @@ camera.attachControl(canvas, true);
     // Affect a material
     ground.material = material;
 
-    // Render every frame
-    engine.runRenderLoop(() => {
-        scene.render();
-    });
-
     /*
-    let camera, scene, renderer;
-    let geometry, material, mesh;
+    Promise.all([
+        SceneLoader.ImportMeshAsync(null, baseUrl + "BoomBox/glTF/", "BoomBox.gltf", scene).then(
+            function (result) {
+                result.meshes[0].position.x = 1.5;
+                result.meshes[0].position.y = 0.5;
+                result.meshes[0].scaling.scaleInPlace(50);
+            }
+        ),
+        SceneLoader.ImportMeshAsync(null, baseUrl + "Avocado/glTF/", "Avocado.gltf", scene).then(
+            function (result) {
+                result.meshes[0].position.x = -0.01;
+                result.meshes[0].position.y = -0.01;
+                result.meshes[0].scaling.scaleInPlace(10.25);
+            }
+        )
+    ]).then(() => {});
 
-    $(document).ready(function () {
-        init();
+    */
+
+    /*SceneLoader.ImportMeshAsync(null, baseUrl + "Avocado/glTF/", "Avocado.gltf", scene).then(
+        function (result) {
+            result.meshes[0].position.x = 1;
+            result.meshes[0].position.y = 0.5;
+            result.meshes[0].scaling.scaleInPlace(10);
+            console.log("mesh loaded");
+        }
+    );
+    */
+
+    /* SceneLoader.ImportMeshAsync(null, assetsBaseURL + "BoomBox-web/", "BoomBox.gltf", scene).then(
+        function (result) {
+            result.meshes[0].position.x = -0.5;
+            result.meshes[0].position.y = 1;
+            result.meshes[0].scaling.scaleInPlace(50);
+            console.log("mesh loaded");
+        }
+    );
+    */
+
+    SceneLoader.ImportMeshAsync(null, assetsBaseURL + "sans/", "scene.gltf", scene).then(function (
+        result
+    ) {
+        result.meshes[0].position.x = -0.5;
+        result.meshes[0].position.y = 1;
+        result.meshes[0].scaling.scaleInPlace(1);
+        camera.setTarget(result.meshes[0], false, false);
+        console.log("mesh loaded");
     });
-
-    function init() {
-        camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-        camera.position.z = 1;
-
-        scene = new THREE.Scene();
-
-        geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-        material = new THREE.MeshNormalMaterial();
-
-        mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-
-        renderer = new THREE.WebGLRenderer({ antialias: false });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        animate();
-
-        var Micoche = new Car("Toyota", "RAV4");
-        Micoche.ponMarcha("D");
-        console.log(
-            "Marcha: " +
-                Micoche.userGear +
-                " \nMarca: " +
-                Micoche.marca +
-                " \nModelo: " +
-                Micoche.modelo
-        );
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-
-        mesh.rotation.x += 0.01;
-        mesh.rotation.y += 0.02;
-
-        renderer.render(scene, camera);
-    }
-*/
 })();
