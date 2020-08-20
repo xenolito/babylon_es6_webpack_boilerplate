@@ -10,21 +10,30 @@ import { GridMaterial } from "@babylonjs/materials/grid";
 // Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
 import "@babylonjs/core/Meshes/meshBuilder";
 
-//import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
+import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
 
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-import "@babylonjs/loaders";
+//import "@babylonjs/loaders";
+
+/*------------------------------------------------------------------------------------------------------*
+                        DEGUG LIBRARIES
+\*------------------------------------------------------------------------------------------------------*/
+//import "@babylonjs/core/Debug/debugLayer";
+//import "@babylonjs/inspector";
 
 (function () {
+    let divFps = document.getElementById("fps");
     const assetsBaseURL = "https://pictau.com/noBorrar/3Dassets/meshes/";
     // Get the canvas element from the DOM.
     const canvas = document.getElementById("renderCanvas");
 
     // Associate a Babylon Engine to it.
     const engine = new Engine(canvas);
+
     // Render every frame
     engine.runRenderLoop(() => {
         scene.render();
+        divFps.innerHTML = engine.getFps().toFixed() + " fps";
     });
 
     window.addEventListener("resize", function () {
@@ -35,7 +44,7 @@ import "@babylonjs/loaders";
     var scene = new Scene(engine);
 
     // Parameters: alpha, beta, radius, target position, scene
-    var camera = new ArcRotateCamera("Camera", 0, 0, 15, new Vector3(0, 0, 0), scene);
+    var camera = new ArcRotateCamera("Camera", 0, 0, 15, new Vector3(0, 0, 0), scene, true);
 
     // Positions the camera overwriting alpha, beta, radius
     camera.setPosition(new Vector3(0, 5, 10));
@@ -77,6 +86,8 @@ camera.attachControl(canvas, true);
     // Affect a material
     ground.material = material;
 
+    //scene.debugLayer.show();
+
     /*
     Promise.all([
         SceneLoader.ImportMeshAsync(null, baseUrl + "BoomBox/glTF/", "BoomBox.gltf", scene).then(
@@ -117,6 +128,31 @@ camera.attachControl(canvas, true);
     );
     */
 
+    const gltfMeshesToTest = {
+        baseURL: assetsBaseURL,
+        meshes: {
+            alien: {
+                dir: "Alien",
+                mesh: "Alien.gltf"
+            },
+            brainStem: {
+                dir: "BrainStem",
+                mesh: "BrainStem.gltf"
+            },
+            cloth: {
+                dir: "Sheen",
+                mesh: "Cloth.gltf"
+            },
+            fan: {
+                dir: "vintageDeskFan",
+                mesh: "vintageFan_animated.gltf",
+                scale: 0.05
+            }
+        }
+    };
+
+    let loadMesh = loadMeshGltf("fan");
+    /*
     SceneLoader.ImportMeshAsync(null, assetsBaseURL + "sans/", "scene.gltf", scene).then(function (
         result
     ) {
@@ -124,6 +160,35 @@ camera.attachControl(canvas, true);
         result.meshes[0].position.y = 1;
         result.meshes[0].scaling.scaleInPlace(1);
         camera.setTarget(result.meshes[0], false, false);
+        camera.allowUpsideDown = false;
         console.log("mesh loaded");
+        return result.meshes[0];
     });
+    */
+
+    console.log(gltfMeshesToTest.meshes["chair"]);
+
+    function loadMeshGltf(meshId) {
+        SceneLoader.ImportMeshAsync(
+            null,
+            gltfMeshesToTest.baseURL + gltfMeshesToTest.meshes[meshId].dir + "/",
+            gltfMeshesToTest.meshes[meshId].mesh,
+            scene
+        ).then(function (result) {
+            result.meshes[0].position.x = -0.5;
+            result.meshes[0].position.y = 1.5;
+            result.meshes[0].scaling.scaleInPlace(gltfMeshesToTest.meshes[meshId].scale || 1);
+            camera.setTarget(result.meshes[0], false, false);
+            camera.allowUpsideDown = false;
+
+            camera.lowerBetaLimit = 0.1;
+            camera.upperBetaLimit = (Math.PI / 2) * 1.1;
+            camera.lowerRadiusLimit = 3;
+            camera.upperRadiusLimit = 45;
+            //camera.pinchPrecision = 1;
+            //camera.pinchDeltaPercentage = 1;
+
+            return result.meshes[0];
+        });
+    }
 })();

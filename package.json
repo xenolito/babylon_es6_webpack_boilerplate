@@ -15,6 +15,7 @@
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "@babylonjs/core": "^4.1.0",
+    "@babylonjs/inspector": "^4.1.0",
     "@babylonjs/loaders": "^4.1.0",
     "@babylonjs/materials": "^4.1.0",
     "autoprefixer": "^9.8.5",
