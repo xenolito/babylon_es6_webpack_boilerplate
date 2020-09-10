@@ -18,12 +18,12 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 /*------------------------------------------------------------------------------------------------------*
                         DEGUG LIBRARIES
 \*------------------------------------------------------------------------------------------------------*/
-//import "@babylonjs/core/Debug/debugLayer";
-//import "@babylonjs/inspector";
+import "@babylonjs/core/Debug/debugLayer";
+import "@babylonjs/inspector";
 
 (function () {
     let divFps = document.getElementById("fps");
-    const assetsBaseURL = "https://pictau.com/noBorrar/3Dassets/meshes/";
+    const assetsBaseURL = "https://webgl.pictau.com/3Dassets/meshes/";
     // Get the canvas element from the DOM.
     const canvas = document.getElementById("renderCanvas");
 
@@ -166,7 +166,7 @@ camera.attachControl(canvas, true);
     });
     */
 
-    console.log(gltfMeshesToTest.meshes["chair"]);
+
 
     function loadMeshGltf(meshId) {
         SceneLoader.ImportMeshAsync(
